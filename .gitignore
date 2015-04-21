@@ -2,3 +2,4 @@
 *.swo
 *.swn
 /go-react-jetpack
+public/static/js/bin/*

@@ -49,6 +49,7 @@ class Timer extends TypedReact.Component<TimerProps, TimerState> {
 var RTimer = TypedReact.createClass(Timer);
 
 React.render(
-        React.createElement(RTimer, {tickInterval: 1000}),
+        <RTimer tickInterval={300} />,
+
         document.getElementById('content')
 );

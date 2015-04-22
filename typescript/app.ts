@@ -31,12 +31,14 @@ class CommentBox extends TypedReact.Component<CommentBoxProps, CommentBoxState> 
             dataType: 'json',
             type: 'POST',
             data: c,
-            success: function(data){
+            success: (data) => {
+                console.log("received");
+                console.log(data);
                 this.setState({comments: data});
             },
-            error: function(xhr, status, err){
+            error: (xhr, status, err) => {
                 console.error(this.props.url, status, err.toString());
-            }.bind(this)
+            }
         });
     }
 
@@ -47,6 +49,7 @@ class CommentBox extends TypedReact.Component<CommentBoxProps, CommentBoxState> 
         return (
             <div className="commentBox">
                 Hello world! I am a commentbox
+                <RCommentList comments={this.state.comments} />
                 <RCommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
         )
@@ -84,8 +87,8 @@ class CommentList extends TypedReact.Component<CommentListProps, CommentListStat
         var commentNodes = this.props.comments.map(function(comment){
             return (
                 <div>
-                    Comment is {comment.author}
-                    text is {comment.text}
+                    <p>Comment is <strong>{comment.author}</strong></p>
+                    <p>text is <strong>{comment.text}</strong></p>
                 </div>
             )
         });

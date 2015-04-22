@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"text/template"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type handler func(http.ResponseWriter, *http.Request) error
@@ -85,13 +86,27 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 	http.Error(w, "An unexpected server error has occurred", http.StatusInternalServerError)
 }
 
-func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
-    type comment struct {
-        Text string `json:"text"`
-        Author string `json:"author"`
-    }
+type comment struct {
+	Author string `json:"author"`
+	Text   string `json:"text"`
+}
 
-    return serveJson(w, r, []comment{comment{"jkl;", "Ms. Baz"}})
+var comments = []comment{comment{"Mr. Foo", "asdf"}, comment{"Ms. Bar", "qwer"}}
+
+func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
+	if r.Method == "POST" {
+		var c comment
+		err := json.NewDecoder(r.Body).Decode(&c)
+		if err != nil {
+			return err
+		}
+        
+        // For demo purposes only
+        // This is not threadsafe
+		comments = append(comments, c)
+	}
+
+	return serveJson(w, r, comments)
 }
 
 // serveJson serves the JSON representation of arbitrary data
@@ -99,9 +114,9 @@ func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
 func serveJson(w http.ResponseWriter, r *http.Request, data interface{}) error {
 	bts, err := json.Marshal(data)
 	if err != nil {
-        return err
+		return err
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write(bts)
-    return nil
+	return nil
 }

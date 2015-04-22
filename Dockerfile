@@ -26,6 +26,8 @@ RUN npm install -g typescript \
         && npm install typescript-loader \
         && tsd query jquery --action install
 
+RUN npm install jsx-loader
+
 # Copy the local package files to the container's workspace.
 ADD . /go/src/github.com/ChimeraCoder/go-react-jetpack
 

@@ -39,6 +39,8 @@ class Timer extends TypedReact.Component<TimerProps, TimerState> {
 
     render() {
         console.log(this);
+        console.log("props");
+        console.log(this.props)
         return React.DOM.div(null, "Ticks Elapsed: ", this.state.ticksElapsed);
     }
 }
@@ -47,6 +49,6 @@ class Timer extends TypedReact.Component<TimerProps, TimerState> {
 var RTimer = TypedReact.createClass(Timer);
 
 React.render(
-        <RTimer />,
+        React.createElement(RTimer, {tickInterval: 1000}),
         document.getElementById('content')
 );

@@ -5,14 +5,14 @@ MAINTAINER Aditya Mukerjee <dev@chimeracoder.net>
 
 
 RUN apt-get update
-RUN apt-get install -y wget npm node \
+RUN apt-get install -y wget npm nodejs \
     && apt-get autoremove
 
 RUN mkdir -p /go/src/github.com/ChimeraCoder/go-react-jetpack
 WORKDIR /go/src/github.com/ChimeraCoder/go-react-jetpack
 
 
-RUN npm install -g typescript-compiler
+RUN npm install -g typescript
 RUN npm install -g webpack
 RUN npm install --save-dev babel-loader
 RUN npm install es6-promise flux object-assign react
@@ -28,6 +28,9 @@ ADD . /go/src/github.com/ChimeraCoder/go-react-jetpack
 RUN go get .
 RUN go install github.com/ChimeraCoder/go-react-jetpack
 
+
+RUN ln -s /usr/bin/nodejs /usr/bin/node
+ENV PATH /usr/bin:/bin:/usr/sbin:/sbin
 # build the Javascript files
 #RUN make
 

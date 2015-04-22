@@ -32,11 +32,58 @@ class CommentBox extends TypedReact.Component<CommentBoxProps, CommentBoxState> 
     }
 }
 
+class comment {
+    text : string
+    author : string
+
+    constructor(text, author){
+        this.text = text;
+        this.author = author;
+    }
+}
+
+export interface CommentListProps {
+    comments : comment[]
+}
+
+export interface CommentListState {
+}
+
+class CommentList extends TypedReact.Component<CommentListProps, CommentListState>{
+
+
+    render() {
+        var commentNodes = this.props.comments.map(function(comment){
+            return (
+                <div>
+                    Comment is {comment.author}
+                    text is {comment.text}
+                </div>
+            )
+        });
+
+        return (
+                <div className="commentList">
+                    {commentNodes}
+                </div>
+        )
+            
+
+    }
+}
+
 
 var RCommentBox = TypedReact.createClass(CommentBox);
 
+var RCommentList = TypedReact.createClass(CommentList);
+
+var testComments = [
+    new comment("asdf", "Mr. Foo"),
+    new comment("qwer", "Ms. Bar"),
+]
+
 React.render(
-        <RCommentBox/>,
+        <RCommentList comments={testComments}/>,
 
         document.getElementById('content')
 );

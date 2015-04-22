@@ -5,12 +5,11 @@ import React = require("react");
 import TypedReact = require("typed-react");
 
 export interface TimerProps {
-    tickInterval: number;
+    tickInterval?: number;
 }
 
 interface TimerState {
-    ticksElapsed: number;
-}
+    ticksElapsed: number; }
 
 class Timer extends TypedReact.Component<TimerProps, TimerState> {
     private interval: number;
@@ -28,6 +27,9 @@ class Timer extends TypedReact.Component<TimerProps, TimerState> {
     }
 
     componentDidMount() {
+        if(!this.props.tickInterval){
+            this.props.tickInterval = 500
+        }
         this.interval = setInterval(this.tick, this.props.tickInterval);
     }
 
@@ -36,9 +38,15 @@ class Timer extends TypedReact.Component<TimerProps, TimerState> {
     }
 
     render() {
+        console.log(this);
         return React.DOM.div(null, "Ticks Elapsed: ", this.state.ticksElapsed);
     }
 }
 
-console.log('asdfasdfas');
-export var timer = TypedReact.createClass(Timer);
+
+var RTimer = TypedReact.createClass(Timer);
+
+React.render(
+        <RTimer />,
+        document.getElementById('content')
+);

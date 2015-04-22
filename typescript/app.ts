@@ -4,52 +4,39 @@
 import React = require("react");
 import TypedReact = require("typed-react");
 
-export interface TimerProps {
+export interface CommentBoxProps {
     tickInterval?: number;
 }
 
-interface TimerState {
+interface CommentBoxState {
     ticksElapsed: number; }
 
-class Timer extends TypedReact.Component<TimerProps, TimerState> {
+class CommentBox extends TypedReact.Component<CommentBoxProps, CommentBoxState> {
     private interval: number;
 
     getInitialState() {
         return {
-            ticksElapsed: 0
+            data: []
         };
-    }
-
-    tick() {
-        this.setState({
-            ticksElapsed: this.state.ticksElapsed + 1
-        });
-    }
-
-    componentDidMount() {
-        if(!this.props.tickInterval){
-            this.props.tickInterval = 500
-        }
-        this.interval = setInterval(this.tick, this.props.tickInterval);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.interval);
     }
 
     render() {
         console.log(this);
         console.log("props");
         console.log(this.props)
-        return React.DOM.div(null, "Ticks Elapsed: ", this.state.ticksElapsed);
+        return (
+            <div className="commentBox">
+                Hello world! I am a commentbox
+            </div>
+        )
     }
 }
 
 
-var RTimer = TypedReact.createClass(Timer);
+var RCommentBox = TypedReact.createClass(CommentBox);
 
 React.render(
-        <RTimer tickInterval={300} />,
+        <RCommentBox/>,
 
         document.getElementById('content')
 );

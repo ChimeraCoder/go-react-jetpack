@@ -24,6 +24,7 @@ RUN npm install typed-react --save
 RUN tsd query react --action install
 RUN npm install jsx-typescript
 RUN npm install typescript-loader
+RUN tsd query jquery --action install
 
 
 # Copy the local package files to the container's workspace.
@@ -36,6 +37,7 @@ RUN go install github.com/ChimeraCoder/go-react-jetpack
 
 RUN cp typings/react -r typescript
 RUN cp node_modules/typed-react -r typescript
+RUN cp typings/jquery -r typescript
 
 # build the Javascript files
 RUN make

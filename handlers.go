@@ -85,13 +85,23 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 	http.Error(w, "An unexpected server error has occurred", http.StatusInternalServerError)
 }
 
+func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
+    type comment struct {
+        Text string `json:"text"`
+        Author string `json:"author"`
+    }
+
+    return serveJson(w, r, []comment{comment{"jkl;", "Ms. Baz"}})
+}
+
 // serveJson serves the JSON representation of arbitrary data
 // Useful for serving api.example.com/users/1
-func serveJson(w http.ResponseWriter, r *http.Request, data interface{}) {
+func serveJson(w http.ResponseWriter, r *http.Request, data interface{}) error {
 	bts, err := json.Marshal(data)
 	if err != nil {
-		panic(err)
+        return err
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write(bts)
+    return nil
 }

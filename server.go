@@ -14,6 +14,7 @@ var (
 func main() {
 	r := mux.NewRouter()
 	r.Handle("/", handler(serveHome))
+	r.Handle("/comments.json", handler(serveCommentsJSON))
 	http.Handle("/static/", http.FileServer(http.Dir("public")))
 	http.Handle("/", r)
 

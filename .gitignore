@@ -3,3 +3,4 @@
 *.swn
 /go-react-jetpack
 public/static/js/bin/*
+node_modules

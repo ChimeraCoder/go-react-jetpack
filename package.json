@@ -1,0 +1,22 @@
+{
+  "name": "go-react-jetpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "babel-core": "^5.1.11",
+    "babel-loader": "^5.0.0",
+    "jsx-loader": "^0.13.1",
+    "jsx-typescript": "^1.5.0-alpha.5",
+    "react": "^0.13.2",
+    "typed-react": "^3.4.1",
+    "typescript-loader": "^1.1.3",
+    "webpack": "^1.8.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

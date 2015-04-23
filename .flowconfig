@@ -1,0 +1,10 @@
+[ignore]
+.*/public/*
+
+[include]
+./js/*
+.*/node_modules/*
+
+[libs]
+
+[options]

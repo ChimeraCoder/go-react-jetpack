@@ -4,9 +4,15 @@ FROM golang
 MAINTAINER Aditya Mukerjee <dev@chimeracoder.net>
 
 
-RUN apt-get update
-RUN apt-get install -y wget npm nodejs \
+RUN apt-get update \
+    && apt-get install -y wget npm nodejs unzip libelf-dev \
     && apt-get autoremove
+
+
+RUN wget http://flowtype.org/downloads/flow-linux64-latest.zip \
+    && unzip flow-linux64-latest.zip \
+    && mv flow/flow /usr/bin/flow
+   
 
 RUN mkdir -p /go/src/github.com/ChimeraCoder/go-react-jetpack
 WORKDIR /go/src/github.com/ChimeraCoder/go-react-jetpack
@@ -26,17 +32,13 @@ RUN npm install -g typescript \
         && npm install typescript-loader \
         && tsd query jquery --action install
 
-RUN npm install jsx-loader
-
 # Copy the local package files to the container's workspace.
 ADD . /go/src/github.com/ChimeraCoder/go-react-jetpack
 
 
 
-RUN cp typings/react -r typescript \
-        && cp node_modules/typed-react -r typescript \
-        && cp typings/jquery -r typescript
-
+ENV LOGNAME root
+ENV USER root
 # build the Javascript files
 RUN make
 

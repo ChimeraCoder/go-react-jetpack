@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"text/template"
@@ -70,7 +71,7 @@ func renderTemplate(w http.ResponseWriter, data interface{}, filenames ...string
 	// Write to a temporary buffer when executing the template
 	// Otherwise, if ExecuteTemplate causes an error, partially-written content may be sent
 	b := bytes.NewBuffer([]byte{})
-	err = s1.ExecuteTemplate(b, "base", nil)
+	err = s1.ExecuteTemplate(b, "base", data)
 	if err != nil {
 		return err
 	}
@@ -86,12 +87,12 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 }
 
 func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
-    type comment struct {
-        Text string `json:"text"`
-        Author string `json:"author"`
-    }
+	type comment struct {
+		Text   string `json:"text"`
+		Author string `json:"author"`
+	}
 
-    return serveJson(w, r, []comment{comment{"jkl;", "Ms. Baz"}})
+	return serveJson(w, r, []comment{comment{"jkl;", "Ms. Baz"}})
 }
 
 // serveJson serves the JSON representation of arbitrary data
@@ -99,9 +100,40 @@ func serveCommentsJSON(w http.ResponseWriter, r *http.Request) error {
 func serveJson(w http.ResponseWriter, r *http.Request, data interface{}) error {
 	bts, err := json.Marshal(data)
 	if err != nil {
-        return err
+		return err
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write(bts)
-    return nil
+	return nil
+}
+
+var logins = map[string][]byte{
+	"user@example.com": []byte("$2a$12$4263qyI6GKANbunG0BtRAu9va3CRVcNPwTsFVUU3Eg69/HfrYgaLC"), // password is "password"
+}
+
+func serveLogin(w http.ResponseWriter, r *http.Request) error {
+	switch r.Method {
+	case "GET":
+		return renderTemplate(w, nil, "templates/login.tmpl")
+	case "POST":
+		r.ParseForm()
+		email := r.Form.Get("email")
+		password := []byte(r.Form.Get("password"))
+		if len(email) == 0 {
+			return fmt.Errorf("invalid email")
+		}
+		hashedPassword := logins[email]
+		err := bcrypt.CompareHashAndPassword(hashedPassword, password)
+		if err != nil {
+			log.Print("wrong pass")
+			return renderTemplate(w, "Invalid login", "templates/login.tmpl")
+		}
+		http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
+		return nil
+	}
+	return fmt.Errorf("Invalid method")
+}
+
+func serveDashboard(w http.ResponseWriter, r *http.Request) error {
+	return renderTemplate(w, nil, "templates/dashboard.tmpl")
 }

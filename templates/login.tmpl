@@ -1,0 +1,20 @@
+{{define "body"}}
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        {{if . }}
+            <div class="error">
+                {{ . }}
+            </div>
+        {{ end }}
+        <form action="/login" method="POST">
+            <input type="email" name="email" placeholder="email"/>
+            <input type="password" name="password" placeholder="password"/>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
+    </div>
+</div>
+
+{{end}}

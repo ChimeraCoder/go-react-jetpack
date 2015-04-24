@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
@@ -28,9 +29,30 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
+	log.Printf("%s %s", r.Method, r.URL.Path)
 	err := h(w, r)
 	if err != nil {
 		handleError(w, r, err)
+	}
+}
+
+var store = sessions.NewCookieStore([]byte("insert-secret-here"))
+
+// auth wraps any handler to require a login
+func auth(h handler) handler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		session, _ := store.Get(r, "session-name")
+		authToken, ok := session.Values["auth_token"]
+
+		// Validate authToken if necessary (e.g. checking against a
+		// blacklist or timehout)
+		if !ok || authToken == "" {
+			log.Print("Not logged in")
+			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+			return nil
+		}
+		log.Print("logged in")
+		return h(w, r)
 	}
 }
 
@@ -128,6 +150,10 @@ func serveLogin(w http.ResponseWriter, r *http.Request) error {
 			log.Print("wrong pass")
 			return renderTemplate(w, "Invalid login", "templates/login.tmpl")
 		}
+		session, _ := store.Get(r, "session-name")
+		session.Values["auth_token"] = email // put an actual token here
+		session.Save(r, w)
+
 		http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 		return nil
 	}
@@ -136,4 +162,12 @@ func serveLogin(w http.ResponseWriter, r *http.Request) error {
 
 func serveDashboard(w http.ResponseWriter, r *http.Request) error {
 	return renderTemplate(w, nil, "templates/dashboard.tmpl")
+}
+
+func serveLogout(w http.ResponseWriter, r *http.Request) error {
+	session, _ := store.Get(r, "session-name")
+	delete(session.Values, "auth_token")
+	session.Save(r, w)
+	http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+	return nil
 }

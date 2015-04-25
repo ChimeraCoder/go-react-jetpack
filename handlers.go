@@ -47,11 +47,9 @@ func auth(h handler) handler {
 		// Validate authToken if necessary (e.g. checking against a
 		// blacklist or timehout)
 		if !ok || authToken == "" {
-			log.Print("Not logged in")
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return nil
 		}
-		log.Print("logged in")
 		return h(w, r)
 	}
 }

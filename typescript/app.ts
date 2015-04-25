@@ -5,6 +5,7 @@
 import React = require("react");
 import TypedReact = require("typed-react");
 
+
 export interface CommentBoxProps {
     url : string
 }
@@ -48,7 +49,6 @@ class CommentBox extends TypedReact.Component<CommentBoxProps, CommentBoxState> 
         console.log(this.props)
         return (
             <div className="commentBox">
-                Hello world! I am a commentbox
                 <RCommentList comments={this.state.comments} />
                 <RCommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
@@ -123,10 +123,16 @@ class CommentForm extends TypedReact.Component<CommentFormProps, CommentFormStat
 
     render(){
         return (
-                <form className="commentForm" onSubmit={this.handleSubmit} >
-                    <input type="text" placeholder="Your name" ref="author" />
-                    <input type="text" placeholder="Say something..." ref="text"/>
-                    <input type="submit" value="Post" />
+                <form className="commentForm form-horizontal" onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                        <input type="text" placeholder="Your name" ref="author" />
+                    </div>
+                    <div className="form-group">
+                        <textarea className="form-control" rows="3" placeholder="Say something..." ref="text"/>
+                    </div>
+                    <div className="form-group">
+                        <button type="submit" className="btn btn-default">Post Comment</button>
+                    </div>
                 </form>
         )
     }
@@ -146,6 +152,7 @@ var testComments = [
     new comment("qwer", "Ms. Bar"),
 ]
 
+console.log('asfd')
 React.render(
         <RCommentBox url="comments.json" />,
 

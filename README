@@ -1,0 +1,20 @@
+Go/React Jetpack
+=====================
+
+This is a sample application demonstrating the use of Go with React.js.
+
+Installation and use
+-----------------------
+
+Simply run `go get github.com/ChimeraCoder/go-react-jetpack`.
+
+
+Related Projects
+-----------------
+
+For a similar application using Angular.js, take a look at the [Angular.js version](https://github.com/ChimeraCoder/go-react-jetpack)
+
+
+###License
+
+Jetpack is free software provided under the MIT (X11) license. Details are provided in the COPYNG file. 
